@@ -1,0 +1,40 @@
+# MarkHub Configuration Example
+#
+# Place this file at ~/.config/markhub/config.yaml or ./markhub.yaml
+
+folders:
+  - path: ./docs
+    alias: User Guide
+  - path: ./architecture
+    alias: Development
+    exclude: ["drafts/**"]                  # folder-level excludes
+  - path: /home/user/my-repo
+    alias: "my-repo (main)"
+    git_ref: main                           # browse a git branch
+    sub_path: docs                          # only serve a subdirectory
+
+# HTTP server port
+port: 8080
+
+# Default theme: "light" or "dark"
+theme: light
+
+# Enable file watching for hot reload
+watch: true
+
+# File extensions to treat as markdown
+extensions:
+  - .md
+  - .markdown
+
+# Global excludes — dependency dirs contain thousands of .md files from packages
+exclude:
+  - node_modules
+  - .git
+  - .svn
+  - vendor
+
+# Repo-level excludes (applied to all refs of the same repo)
+repo_exclude:
+  /home/user/my-repo:
+    - "internal/**"
