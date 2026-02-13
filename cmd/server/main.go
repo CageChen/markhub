@@ -19,6 +19,13 @@ import (
 //go:embed web/*
 var webFS embed.FS
 
+// Version information, injected at build time via ldflags.
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	// Load configuration
 	cfg, err := config.Load()
@@ -26,7 +33,7 @@ func main() {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	log.Printf("MarkHub - Markdown Renderer")
+	log.Printf("MarkHub %s (commit: %s, built: %s)", version, commit, date)
 	log.Printf("Config file: %s", cfg.GetConfigFilePath())
 	log.Printf("Serving %d folder(s):", len(cfg.Folders))
 	for i, f := range cfg.Folders {

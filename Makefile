@@ -1,4 +1,4 @@
-.PHONY: build run clean test deps
+.PHONY: build run clean test deps release-dry-run
 
 # Binary name
 BINARY=markhub
@@ -14,8 +14,13 @@ GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 GOMOD=$(GOCMD) mod
 
+# Version info
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
+COMMIT  ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "none")
+DATE    ?= $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
+
 # Build flags
-LDFLAGS=-ldflags "-s -w"
+LDFLAGS=-ldflags "-s -w -X main.version=$(VERSION) -X main.commit=$(COMMIT) -X main.date=$(DATE)"
 
 # Default target
 all: deps build
@@ -69,6 +74,10 @@ docker-build:
 docker-run:
 	docker run -p 8080:8080 -v $(PWD)/docs:/docs $(BINARY)
 
+# Release dry-run (local preview, no publish)
+release-dry-run:
+	goreleaser release --snapshot --clean
+
 # Install globally
 install:
 	$(GOCMD) install ./cmd/server
@@ -85,12 +94,14 @@ lint:
 # Help
 help:
 	@echo "Available targets:"
-	@echo "  make deps        - Install dependencies"
-	@echo "  make build       - Build the binary"
-	@echo "  make run         - Build and run the application"
-	@echo "  make dev         - Run with hot reload (requires air)"
-	@echo "  make test        - Run tests"
-	@echo "  make clean       - Clean build artifacts"
-	@echo "  make build-all   - Build for all platforms"
-	@echo "  make docker-build - Build Docker image"
-	@echo "  make install     - Install globally"
+	@echo "  make deps            - Install dependencies"
+	@echo "  make build           - Build the binary"
+	@echo "  make run             - Build and run the application"
+	@echo "  make dev             - Run with hot reload (requires air)"
+	@echo "  make test            - Run tests"
+	@echo "  make clean           - Clean build artifacts"
+	@echo "  make build-all       - Build for all platforms"
+	@echo "  make docker-build    - Build Docker image"
+	@echo "  make release-dry-run - Local release preview (no publish)"
+	@echo "  make install         - Install globally"
+

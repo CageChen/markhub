@@ -50,7 +50,15 @@ internal/
 | PUT | `/api/exclude` | `TreeHandler.UpdateGlobalExclude` |
 | PUT | `/api/repo-exclude` | `TreeHandler.UpdateRepoExclude` |
 
+## Release
+
+- **Automated**: Push a `v*` tag → GitHub Actions runs GoReleaser → GitHub Release + Docker image (`ghcr.io/cagechen/markhub`)
+- **Workflow**: `.github/workflows/release.yml`, config in `.goreleaser.yml`
+- **Local preview**: `make release-dry-run` (builds all platforms, no publish)
+- **Version info**: Injected via `ldflags` (`-X main.version/commit/date`)
+
 ## Code Review
 
 - Run `make fmt && make lint && make test` before committing
 - All exported types and functions must have doc comments
+
