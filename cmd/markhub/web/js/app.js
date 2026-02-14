@@ -19,6 +19,7 @@ class MarkHub {
 
     async init() {
         this.initTheme();
+        this.initMermaid();
         this.initZenMode();
         this.bindEvents();
         await this.loadFileTree();
@@ -39,6 +40,48 @@ class MarkHub {
         const next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.dataset.theme = next;
         localStorage.setItem('markhub-theme', next);
+        this.initMermaid();
+        this.renderMermaidBlocks();
+    }
+
+    // ========================================
+    // Mermaid Diagrams
+    // ========================================
+    initMermaid() {
+        if (typeof mermaid === 'undefined') return;
+        const isDark = document.documentElement.dataset.theme === 'dark';
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: isDark ? 'dark' : 'default',
+            securityLevel: 'loose',
+        });
+    }
+
+    async renderMermaidBlocks() {
+        if (typeof mermaid === 'undefined') return;
+
+        const container = document.getElementById('content');
+        if (!container) return;
+
+        const codeBlocks = container.querySelectorAll('pre > code.language-mermaid');
+        if (codeBlocks.length === 0) return;
+
+        // Reset mermaid internal ID counter to avoid conflicts on re-render
+        this.initMermaid();
+
+        codeBlocks.forEach((code, i) => {
+            const pre = code.parentElement;
+            const div = document.createElement('div');
+            div.className = 'mermaid';
+            div.textContent = code.textContent;
+            pre.replaceWith(div);
+        });
+
+        try {
+            await mermaid.run({ nodes: container.querySelectorAll('.mermaid') });
+        } catch (e) {
+            console.warn('Mermaid rendering failed:', e);
+        }
     }
 
     // ========================================
@@ -696,6 +739,7 @@ class MarkHub {
     renderContent(data) {
         const content = document.getElementById('content');
         content.innerHTML = `<div class="markdown-body">${data.html}</div>`;
+        this.renderMermaidBlocks();
     }
 
     renderBreadcrumb(path, folderId) {
