@@ -8,7 +8,7 @@
 - **Hot reload dev**: `make dev` (requires [air](https://github.com/air-verse/air))
 - **Cross-compile**: `make build-all` (linux/darwin/windows, amd64/arm64)
 - **Docker**: `make docker-build` → `docker run -p 8080:8080 -v $(pwd)/docs:/docs markhub`
-- **Frontend assets**: embedded via `//go:embed` in `cmd/server/main.go`, no separate build step
+- **Frontend assets**: embedded via `//go:embed` in `cmd/markhub/main.go`, no separate build step
 
 ## Testing
 
@@ -27,7 +27,7 @@
 ## Architecture
 
 ```
-cmd/server/
+cmd/markhub/
   main.go              # Entry point: config, router, watcher, embedded assets
   web/                 # Frontend (HTML/CSS/JS), embedded into binary
 internal/

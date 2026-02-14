@@ -20,20 +20,39 @@ Point it at any number of local repos and git refs to instantly browse Markdown 
 - 🧘 **Zen Mode** - Distraction-free reading (`Ctrl+Shift+Z`)
 - 🚀 **Single Binary** - No external runtime required, all assets embedded
 
-## Quick Start
+## Installation
+
+**One-line install** (Linux / macOS):
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/CageChen/markhub/master/install.sh | sh
+```
+
+**Go install** (requires Go 1.24+):
+
+```bash
+go install github.com/CageChen/markhub/cmd/markhub@latest
+```
+
+**Build from source**:
 
 ```bash
 git clone https://github.com/CageChen/markhub.git
 cd markhub
 make build
-./bin/markhub --path ./docs --open
 ```
 
-Or with Docker:
+**Docker**:
 
 ```bash
 docker build -t markhub .
 docker run -p 8080:8080 -v $(pwd)/docs:/docs markhub
+```
+
+## Quick Start
+
+```bash
+markhub --path ./docs --open
 ```
 
 ## Configuration

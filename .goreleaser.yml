@@ -7,7 +7,7 @@ before:
 
 builds:
   - id: markhub
-    main: ./cmd/server
+    main: ./cmd/markhub
     binary: markhub
     env:
       - CGO_ENABLED=0
